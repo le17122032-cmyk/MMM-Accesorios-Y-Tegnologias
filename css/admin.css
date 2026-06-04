@@ -1,0 +1,43 @@
+body{
+    background:#111;
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:20px;
+}
+
+h1{
+    color:#d4af37;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th{
+    background:#d4af37;
+    color:black;
+}
+
+th,td{
+    padding:12px;
+    border:1px solid #333;
+}
+
+a{
+    color:#d4af37;
+    text-decoration:none;
+}
+
+.card{
+    background:#1a1a1a;
+    border:1px solid #d4af37;
+    padding:20px;
+    width:250px;
+}
+
+.cards{
+    display:flex;
+    gap:20px;
+}

@@ -1,53 +1,81 @@
 <?php
 include("conexion.php");
 
-if(isset($_POST['registrar'])){
+if (isset($_POST['registrar'])) {
+    $nombre    = $_POST['nombre'];
+    $apellido  = $_POST['apellido'];
+    $correo    = $_POST['correo'];
+    $password  = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $nombre = $_POST['nombre'];
-    $correo = $_POST['correo'];
+    mysqli_query($conn, "
+        INSERT INTO usuarios (nombre, apellido, correo, password)
+        VALUES ('$nombre', '$apellido', '$correo', '$password')
+    ");
 
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-    $sql = "INSERT INTO usuarios(nombre, correo, password)
-            VALUES('$nombre','$correo','$password')";
-
-    if(mysqli_query($conn,$sql)){
-        echo "Usuario registrado correctamente";
-    }else{
-        echo "Error al registrar";
-    }
+    header("Location: login.php");
+    exit();
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<title>Registro</title>
-<link rel="stylesheet" href="login.css">
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-
-<div class="formulario">
-
-<h2>Crear Cuenta</h2>
-
-<form method="POST">
-
-<input type="text" name="nombre" placeholder="Nombre completo" required>
-
-<input type="email" name="correo" placeholder="Correo electrónico" required>
-
-<input type="password" name="password" placeholder="Contraseña" required>
-
-<button type="submit" name="registrar">
-Registrarse
-</button>
-
-</form>
-
-<a href="login.php">Ya tengo cuenta</a>
-
-</div>
-
+    <div class="contenedor">
+        <h1>Crear Cuenta</h1>
+        
+        <form method="POST">
+            
+            <div class="input-group">
+                <label for="nombre">Nombre</label>
+                <input 
+                    type="text" 
+                    id="nombre"
+                    name="nombre" 
+                    required>
+            </div>
+            
+            <div class="input-group">
+                <label for="apellido">Apellido</label>
+                <input 
+                    type="text" 
+                    id="apellido"
+                    name="apellido" 
+                    required>
+            </div>
+            
+            <div class="input-group">
+                <label for="correo">Correo electrónico</label>
+                <input 
+                    type="email" 
+                    id="correo"
+                    name="correo" 
+                    required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input 
+                    type="password" 
+                    id="password"
+                    name="password" 
+                    required>
+            </div>
+            
+            <button type="submit" name="registrar" class="btn">
+                Registrarse
+            </button>
+            
+        </form>
+        
+        <div class="link">
+            ¿Ya tienes cuenta? 
+            <a href="login.php">Inicia Sesión</a>
+        </div>
+    </div>
 </body>
 </html>

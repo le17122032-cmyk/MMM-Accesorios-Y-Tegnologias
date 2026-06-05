@@ -2,74 +2,130 @@
 session_start();
 include("conexion.php");
 
-// Consultar los 4 productos más recientes
-$query = "SELECT * FROM productos ORDER BY id DESC LIMIT 4";
-$productos = mysqli_query($conn, $query);
+$productos = mysqli_query($conn, "
+    SELECT * 
+    FROM productos
+    WHERE estado = 'activo'
+    ORDER BY id DESC
+");
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxury Store</title>
+    <title>MMM Accesorios y Tecnología</title>
+
     <link rel="stylesheet" href="css/estilos.css">
 </head>
 
 <body>
 
-    <header>
-        <div class="logo">👑 Luxury Store</div>
+<header>
 
-        <nav>
-            <a href="index.php">Inicio</a>
-            <a href="productos.php">Productos</a>
-            <a href="carrito.php">Carrito</a>
-        </nav>
+    <div class="logo">
+        MMM Accesorios y Tecnología
+    </div>
 
-        <div class="auth-container">
-            <?php if (isset($_SESSION['id'])) : ?>
-                <div class="usuario-logeado">
-                    <span>Bienvenido, <strong><?php echo htmlspecialchars($_SESSION['nombre']); ?></strong></span>
-                    <a href="logout.php" class="btn-salir">Salir</a>
-                </div>
-            <?php else : ?>
-                <form action="procesar_login.php" method="POST" class="form-login-header">
-                    <input type="email" name="correo" placeholder="Correo" required>
-                    <input type="password" name="password" placeholder="Contraseña" required>
-                    <button type="submit">Entrar</button>
-                    <a href="registro.php" class="btn-registro">Registro</a>
-                </form>
+    <nav>
+        <a href="index.php">Inicio</a>
+        <a href="productos.php">Productos</a>
+        <a href="carrito.php">Carrito</a>
+
+        <?php if(isset($_SESSION['id'])): ?>
+
+            <a href="pedidos.php">Mis Pedidos</a>
+            <a href="perfil.php">Mi Perfil</a>
+
+            <?php if(isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin'): ?>
+                <a href="admin/dashboard.php">Administración</a>
             <?php endif; ?>
-        </div>
-    </header>
 
-    <section class="hero">
-        <h1>Luxury Store</h1>
-        <p>Tecnología Premium</p>
-        <a href="productos.php" class="btn-cat">Ver Catálogo</a>
-    </section>
+            <a href="logout.php">Cerrar Sesión</a>
 
-    <section class="destacados">
-        <h2>Productos Destacados</h2>
+        <?php else: ?>
 
-        <div class="contenedor-productos">
-            <?php while ($producto = mysqli_fetch_assoc($productos)) : ?>
-                <div class="card">
-                    <img src="<?php echo htmlspecialchars($producto['imagen']); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                    <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                    <p class="precio">$<?php echo number_format($producto['precio'], 2); ?></p>
-                    <a href="productos.php" class="btn-comprar">Comprar</a>
-                </div>
-            <?php endwith; // Nota: Se cambió a la sintaxis alternativa de llaves para mayor claridad en HTML ?>
-            <?php endwhile; ?>
-        </div>
-    </section>
+            <a href="login.php">Iniciar Sesión</a>
+            <a href="registro.php">Registrarse</a>
 
-    <footer>
-        <p>© 2026 Luxury Store - Todos los derechos reservados</p>
-    </footer>
+        <?php endif; ?>
+
+    </nav>
+
+</header>
+
+<section class="hero">
+
+    <h1>Bienvenido a MMM Accesorios y Tecnología</h1>
+
+    <p>
+        Los mejores accesorios, tecnología y productos gaming.
+    </p>
+
+    <a href="productos.php" class="btn">
+        Ver Productos
+    </a>
+
+</section>
+
+<section class="productos-destacados">
+
+    <h2>Productos Destacados</h2>
+
+    <div class="contenedor-productos">
+
+        <?php while($producto = mysqli_fetch_assoc($productos)): ?>
+
+            <div class="producto">
+
+                <img
+                    src="<?php echo $producto['imagen']; ?>"
+                    alt="<?php echo htmlspecialchars($producto['nombre']); ?>"
+                >
+
+                <h3>
+                    <?php echo htmlspecialchars($producto['nombre']); ?>
+                </h3>
+
+                <p>
+                    <?php echo htmlspecialchars($producto['descripcion']); ?>
+                </p>
+
+                <h4>
+                    $<?php echo number_format($producto['precio'], 2); ?>
+                </h4>
+
+                <form action="carrito.php" method="POST">
+
+                    <input
+                        type="hidden"
+                        name="producto_id"
+                        value="<?php echo $producto['id']; ?>"
+                    >
+
+                    <button type="submit">
+                        Agregar al carrito
+                    </button>
+
+                </form>
+
+            </div>
+
+        <?php endwhile; ?>
+
+    </div>
+
+</section>
+
+<footer>
+
+    <p>
+        © <?php echo date("Y"); ?> MMM Accesorios y Tecnología
+    </p>
+
+</footer>
 
 </body>
-
 </html>

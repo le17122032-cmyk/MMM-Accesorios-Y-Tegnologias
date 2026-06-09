@@ -1,52 +1,48 @@
-<?php
-session_start();
-include("productos.php");
+<div class="carrito-container">
 
-$total = 0;
-?>
+    <h1>🛒 Mi Carrito</h1>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Carrito</title>
-<link rel="stylesheet" href="estilos.css">
-</head>
-<body>
+    <table class="tabla-carrito">
 
-<h1>Carrito de Compras</h1>
+        <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acción</th>
+        </tr>
 
-<a href="index.php">← Seguir comprando</a>
+        <tr>
+            <td class="producto">
+                <img src="img/productos/laptop.jpg">
+                <span>Laptop Gamer</span>
+            </td>
 
-<table>
-<tr>
-    <th>Producto</th>
-    <th>Precio</th>
-</tr>
+            <td>$15,999.99</td>
 
-<?php
+            <td>
+                <input type="number" value="1" min="1">
+            </td>
 
-if(isset($_SESSION['carrito'])){
+            <td>$15,999.99</td>
 
-    foreach($_SESSION['carrito'] as $id){
+            <td>
+                <button class="btn-eliminar">
+                    Eliminar
+                </button>
+            </td>
+        </tr>
 
-        $producto = $productos[$id];
-        $total += $producto['precio'];
+    </table>
 
-        echo "<tr>
-                <td>{$producto['nombre']}</td>
-                <td>$ {$producto['precio']}</td>
-              </tr>";
-    }
-}
-?>
+    <div class="resumen">
 
-<tr>
-    <td><strong>Total</strong></td>
-    <td><strong>$ <?= $total ?></strong></td>
-</tr>
+        <h2>Total: $15,999.99</h2>
 
-</table>
+        <a href="checkout.php" class="btn-pagar">
+            Finalizar Compra
+        </a>
 
-</body>
-</html>
+    </div>
+
+</div>

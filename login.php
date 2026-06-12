@@ -1,16 +1,5 @@
 <?php
 session_start();
-
-if(isset($_SESSION['id'])){
-
-    if($_SESSION['rol'] == 'admin'){
-        header("Location: admin/dashboard.php");
-    }else{
-        header("Location: index.php");
-    }
-
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +7,7 @@ if(isset($_SESSION['id'])){
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Iniciar Sesión</title>
+<title>Iniciar Sesión | MMM Accesorios y Tecnología</title>
 
 <style>
 
@@ -26,114 +15,180 @@ if(isset($_SESSION['id'])){
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
 }
 
 body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#0f0f0f,#1a1a1a);
+    background:#0f0f0f;
+    color:white;
 }
 
-.contenedor{
-    width:420px;
+/* HEADER */
+
+.header{
     background:#181818;
-    border:2px solid #d4af37;
-    border-radius:20px;
-    padding:35px;
-    box-shadow:0 0 25px rgba(212,175,55,.3);
+    border-bottom:2px solid #d4af37;
+}
+
+.top-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 50px;
 }
 
 .logo{
-    text-align:center;
     color:#d4af37;
-    font-size:32px;
+    font-size:28px;
     font-weight:bold;
+}
+
+.menu{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.menu a{
+    color:white;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.menu a:hover{
+    color:#d4af37;
+}
+
+.busqueda{
+    text-align:center;
+    padding:15px;
+}
+
+.busqueda input{
+    width:400px;
+    max-width:90%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+}
+
+.busqueda button{
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#d4af37;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* LOGIN */
+
+.contenedor{
+    max-width:550px;
+    margin:60px auto;
+    background:#181818;
+    border:1px solid #d4af37;
+    border-radius:20px;
+    padding:40px;
+}
+
+.titulo{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.titulo h1{
+    color:#d4af37;
     margin-bottom:10px;
 }
 
-.subtitulo{
-    text-align:center;
-    color:white;
+.titulo p{
+    color:#ccc;
+}
+
+.roles{
+    display:flex;
+    gap:15px;
     margin-bottom:25px;
 }
 
-.input-group{
-    margin-bottom:15px;
+.rol{
+    flex:1;
+    background:#2a2a2a;
+    border:2px solid #444;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+    cursor:pointer;
+    font-weight:bold;
+    transition:.3s;
 }
 
-.input-group label{
+.rol:hover{
+    border-color:#d4af37;
+}
+
+.rol input{
+    margin-bottom:10px;
+}
+
+label{
     display:block;
-    color:#d4af37;
-    margin-bottom:5px;
+    margin-bottom:8px;
 }
 
-.input-group input{
+input[type="email"],
+input[type="password"]{
     width:100%;
     padding:12px;
+    margin-bottom:15px;
     border:none;
     border-radius:10px;
     background:#2a2a2a;
     color:white;
-    font-size:15px;
-}
-
-.input-group input:focus{
-    outline:none;
-    border:1px solid #d4af37;
 }
 
 .btn{
     width:100%;
-    padding:12px;
+    padding:15px;
     border:none;
     border-radius:10px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:bold;
-    margin-top:10px;
-}
-
-.btn-login{
     background:#d4af37;
     color:black;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.btn-login:hover{
-    background:#f1cc5b;
+.btn:hover{
+    background:#f1c84a;
 }
 
-.btn-inicio{
-    display:block;
-    text-align:center;
-    text-decoration:none;
-    background:#333;
-    color:white;
-    padding:12px;
-    border-radius:10px;
-    margin-top:10px;
-}
-
-.btn-inicio:hover{
-    background:#444;
-}
-
-.link{
+.registro{
     text-align:center;
     margin-top:20px;
-    color:white;
 }
 
-.link a{
+.registro a{
     color:#d4af37;
     text-decoration:none;
-    font-weight:bold;
 }
 
-.link a:hover{
+.registro a:hover{
     text-decoration:underline;
+}
+
+@media(max-width:700px){
+
+.top-header{
+    flex-direction:column;
+    gap:15px;
+}
+
+.roles{
+    flex-direction:column;
+}
+
 }
 
 </style>
@@ -141,53 +196,114 @@ body{
 </head>
 <body>
 
-<div class="contenedor">
+<header class="header">
 
-    <div class="logo">
-        MMM Accesorios
+    <div class="top-header">
+
+        <div class="logo">
+            MMM Accesorios y Tecnología
+        </div>
+
+        <nav class="menu">
+
+            <a href="index.php">Inicio</a>
+            <a href="productos.php">Productos</a>
+            <a href="carrito.php">Carrito</a>
+            <a href="pedidos.php">Mis Pedidos</a>
+            <a href="perfil.php">Mi Perfil</a>
+            <a href="login.php">Iniciar Sesión</a>
+            <a href="registro.php">Registrarse</a>
+
+        </nav>
+
     </div>
 
-    <div class="subtitulo">
-        Iniciar Sesión
+
+
+</header>
+
+<div class="contenedor">
+
+    <div class="titulo">
+
+        <h1>🔐 Iniciar Sesión</h1>
+
+        <p>
+            Selecciona tu tipo de acceso
+        </p>
+
     </div>
 
     <form action="procesar_login.php" method="POST">
 
-        <div class="input-group">
-            <label>Correo Electrónico</label>
-            <input
-                type="email"
-                name="correo"
-                placeholder="Ingresa tu correo"
+        <div class="roles">
+
+            <label class="rol">
+
+                <input
+                type="radio"
+                name="tipo_usuario"
+                value="cliente"
                 required>
+
+                <br>
+
+                👤 Cliente
+
+            </label>
+
+            <label class="rol">
+
+                <input
+                type="radio"
+                name="tipo_usuario"
+                value="admin"
+                required>
+
+                <br>
+
+                ⚙️ Administrador
+
+            </label>
+
         </div>
 
-        <div class="input-group">
-            <label>Contraseña</label>
-            <input
-                type="password"
-                name="password"
-                placeholder="Ingresa tu contraseña"
-                required>
-        </div>
+        <label>Correo Electrónico</label>
+
+        <input
+        type="email"
+        name="correo"
+        required>
+
+        <label>Contraseña</label>
+
+        <input
+        type="password"
+        name="password"
+        required>
 
         <button
-            type="submit"
-            class="btn btn-login">
-            Iniciar Sesión
-        </button>
+        type="submit"
+        class="btn">
 
-        <a href="index.php" class="btn-inicio">
-            ← Volver al Inicio
-        </a>
+            Iniciar Sesión
+
+        </button>
 
     </form>
 
-    <div class="link">
-        ¿No tienes cuenta?
+    <div class="registro">
+
+        <p>
+            ¿No tienes cuenta?
+        </p>
+
+        <br>
+
         <a href="registro.php">
-            Regístrate aquí
+            Registrarse como Cliente
         </a>
+
     </div>
 
 </div>

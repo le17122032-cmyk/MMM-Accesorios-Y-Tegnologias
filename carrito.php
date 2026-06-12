@@ -1,48 +1,212 @@
-<div class="carrito-container">
+<?php
+session_start();
 
-    <h1>🛒 Mi Carrito</h1>
+$total = 0;
+?>
 
-    <table class="tabla-carrito">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Carrito</title>
 
-        <tr>
-            <th>Producto</th>
-            <th>Precio</th>
-            <th>Cantidad</th>
-            <th>Subtotal</th>
-            <th>Acción</th>
-        </tr>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-        <tr>
-            <td class="producto">
-                <img src="img/productos/laptop.jpg">
-                <span>Laptop Gamer</span>
-            </td>
+        body {
+            background: #0f0f0f;
+            color: white;
+        }
 
-            <td>$15,999.99</td>
+        .header {
+            background: #181818;
+            border-bottom: 2px solid #d4af37;
+            padding: 20px;
+            text-align: center;
+        }
 
-            <td>
-                <input type="number" value="1" min="1">
-            </td>
+        .header h1 {
+            color: #d4af37;
+        }
 
-            <td>$15,999.99</td>
+        .contenedor {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
 
-            <td>
-                <button class="btn-eliminar">
-                    Eliminar
-                </button>
-            </td>
-        </tr>
+        .carrito-vacio {
+            text-align: center;
+            background: #181818;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #d4af37;
+        }
 
-    </table>
+        .item {
+            background: #181818;
+            border: 1px solid #d4af37;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
 
-    <div class="resumen">
+        .info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-        <h2>Total: $15,999.99</h2>
+        .info img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
 
-        <a href="checkout.php" class="btn-pagar">
-            Finalizar Compra
-        </a>
+        .info h3 {
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .precio {
+            color: white;
+        }
+
+        .cantidad {
+            font-size: 18px;
+        }
+
+        .subtotal {
+            color: #d4af37;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-eliminar {
+            background: #c0392b;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .btn-eliminar:hover {
+            background: #e74c3c;
+        }
+
+        .resumen {
+            margin-top: 30px;
+            background: #181818;
+            border: 1px solid #d4af37;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: right;
+        }
+
+        .total {
+            font-size: 28px;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .botones {
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .btn-seguir {
+            background: #333;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-pagar {
+            background: #d4af37;
+            color: black;
+        }
+
+        .btn-seguir:hover {
+            background: #444;
+        }
+
+        .btn-pagar:hover {
+            background: #f1c84a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>🛒 Mi Carrito</h1>
+    </div>
+
+    <div class="contenedor">
+
+        <?php if(empty($_SESSION['carrito'])){ ?>
+
+            <div class="carrito-vacio">
+                <h2>Tu carrito está vacío</h2>
+                <br>
+                <a href="productos.php" class="btn btn-pagar">Ver Productos</a>
+            </div>
+
+        <?php } else { ?>
+
+            <?php foreach($_SESSION['carrito'] as $indice => $producto){ 
+                $subtotal = $producto['precio'] * $producto['cantidad'];
+                $total += $subtotal;
+            ?>
+
+                <div class="item">
+
+                    <div class="info">
+                        <img src="<?php echo $producto['imagen']; ?>" alt="<?php echo $producto['nombre']; ?>">
+                        <div>
+                            <h3><?php echo $producto['nombre']; ?></h3>
+                            <p class="precio">Precio: $<?php echo number_format($producto['precio'], 2); ?></p>
+                            <p class="cantidad">Cantidad: <?php echo $producto['cantidad']; ?></p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="subtotal">$<?php echo number_format($subtotal, 2); ?></p>
+                        <br>
+                        <a href="eliminar_carrito.php?indice=<?php echo $indice; ?>" class="btn-eliminar">Eliminar</a>
+                    </div>
+
+                </div>
+
+            <?php } ?>
+
+            <div class="resumen">
+                <p class="total">Total: $<?php echo number_format($total, 2); ?></p>
+                <div class="botones">
+                    <a href="productos.php" class="btn btn-seguir">Seguir Comprando</a>
+                    <a href="checkout.php" class="btn btn-pagar">Finalizar Compra</a>
+                </div>
+            </div>
+
+        <?php } ?>
 
     </div>
 
-</div>
+</body>
+</html>

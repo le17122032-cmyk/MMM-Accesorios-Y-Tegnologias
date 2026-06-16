@@ -1,41 +1,102 @@
 <?php
+
 session_start();
 include("conexion.php");
 
-$correo = $_POST['correo'];
-$password = $_POST['password'];
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-$sql = mysqli_query(
-    $conn,
-    "SELECT * FROM usuarios WHERE correo='$correo'"
-);
+    $correo = mysqli_real_escape_string(
+        $conn,
+        $_POST['correo']
+    );
 
-if (mysqli_num_rows($sql) == 1) {
+    $password = mysqli_real_escape_string(
+        $conn,
+        $_POST['password']
+    );
 
-    $usuario = mysqli_fetch_assoc($sql);
+    $tipo_usuario = mysqli_real_escape_string(
+        $conn,
+        $_POST['tipo_usuario']
+    );
 
-    if (password_verify(
-        $password,
-        $usuario['password']
-    )) {
+    $sql = "
+    SELECT *
+    FROM usuarios
+    WHERE correo='$correo'
+    AND rol='$tipo_usuario'
+    LIMIT 1
+    ";
 
-        $_SESSION['id'] = $usuario['id'];
-        $_SESSION['nombre'] = $usuario['nombre'];
-        $_SESSION['rol'] = $usuario['rol'];
+    $resultado = mysqli_query(
+        $conn,
+        $sql
+    );
 
-        if ($usuario['rol'] == 'admin') {
+    if(mysqli_num_rows($resultado) == 1){
 
-            header("Location: admin/dashboard.php");
+        $usuario = mysqli_fetch_assoc(
+            $resultado
+        );
 
-        } else {
+        if($password == $usuario['password']){
 
-            header("Location: index.php");
+            $_SESSION['id'] = $usuario['id'];
+
+            $_SESSION['nombre'] =
+            $usuario['nombre'];
+
+            $_SESSION['correo'] =
+            $usuario['correo'];
+
+            $_SESSION['rol'] =
+            $usuario['rol'];
+
+            if($usuario['rol'] == 'admin'){
+
+                header(
+                "Location: admin/dashboard.php"
+                );
+
+                exit();
+
+            }else{
+
+                header(
+                "Location: index.php"
+                );
+
+                exit();
+
+            }
+
+        }else{
+
+            echo "
+            <script>
+            alert('Contraseña incorrecta');
+            window.location='login.php';
+            </script>
+            ";
 
         }
 
-        exit();
+    }else{
+
+        echo "
+        <script>
+        alert('Usuario no encontrado');
+        window.location='login.php';
+        </script>
+        ";
+
     }
+
+}else{
+
+    header("Location: login.php");
+    exit();
+
 }
 
-echo "Correo o contraseña incorrectos";
 ?>
